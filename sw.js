@@ -5,7 +5,7 @@
    - Map tiles: cache first, so anything viewed or saved stays available offline.
    - Directions: always live from the network (the app draws a straight line if offline).
    Bump VERSION only when you change sw.js or the library files. */
-const VERSION = 'v2';
+const VERSION = 'v3';
 const SHELL = 'ubids-shell-' + VERSION;
 const RUNTIME = 'ubids-runtime-' + VERSION;
 const TILES = 'ubids-tiles-v1';          // must match the name used in index.html
@@ -21,6 +21,7 @@ const CDN_PRECACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js'
 ];
+const OPTIONAL_PRECACHE = ['./school-photo.jpg'];
 const CDN_HOSTS = ['cdnjs.cloudflare.com'];
 const TILE_HOSTS = ['basemaps.cartocdn.com', 'server.arcgisonline.com'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
@@ -33,6 +34,7 @@ self.addEventListener('install', event => {
         // Libraries come from a CDN, so save them without failing the install if the CDN is slow.
         await Promise.all(CDN_PRECACHE.map(u =>
           fetch(u, { mode: 'no-cors' }).then(r => cache.put(u, r)).catch(() => {})));
+        await Promise.all(OPTIONAL_PRECACHE.map(u => cache.add(new Request(u, { cache: 'reload' })).catch(() => {})));
       })
       .then(() => self.skipWaiting())
   );
