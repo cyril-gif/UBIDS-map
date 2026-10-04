@@ -1,0 +1,19 @@
+{
+  "id": "./",
+  "name": "UBIDS Campus Map",
+  "short_name": "UBIDS Map",
+  "description": "Find lecture halls, offices and hostels on the UBIDS campus in Wa and get walking directions.",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0f1419",
+  "theme_color": "#0f1419",
+  "lang": "en-GH",
+  "categories": ["education", "navigation"],
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
