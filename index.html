@@ -135,6 +135,43 @@ dialog{margin:auto;width:min(92vw,420px);background:var(--panel);color:var(--tex
 dialog::backdrop{background:rgba(0,0,0,.6)}
 dialog h3{font-family:var(--head);font-size:20px}
 
+
+/* Home page */
+#home{position:fixed;inset:0;z-index:2500;overflow-y:auto;background:var(--bg) radial-gradient(900px 420px at 50% -8%,rgba(242,181,61,.13),transparent 70%) no-repeat;padding:calc(28px + env(safe-area-inset-top)) 20px calc(36px + env(safe-area-inset-bottom));-webkit-overflow-scrolling:touch}
+#home[hidden]{display:none}
+.home-in{max-width:620px;margin:0 auto}
+.hlogo{width:64px;height:64px;border-radius:16px;display:block}
+.hero h1{font-family:var(--head);font-size:clamp(30px,8vw,42px);line-height:1.08;letter-spacing:-.02em;margin-top:18px;max-width:14em}
+.hero p{margin-top:12px;color:#b9c4d0;line-height:1.55;max-width:46ch;font-size:16px}
+.hbtns{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.hbtns .btn{flex:1 1 220px}
+.hsearch{margin-top:26px}
+.hsearch input{height:50px}
+.hsearch svg{top:16px}
+#home h2{font-family:var(--head);font-size:19px;letter-spacing:-.01em;margin:30px 0 12px}
+#home .list{padding:0;margin:0}
+#homeResults{margin-top:10px!important}
+#home .item{border:1px solid var(--line);background:var(--panel);margin-bottom:8px}
+#home .item:hover{background:var(--raise)}
+.tiles{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{display:flex;flex-direction:column;align-items:flex-start;gap:3px;text-align:left;padding:14px;border-radius:14px;border:1px solid var(--line);background:var(--panel);min-height:96px}
+.tile:hover{border-color:var(--c);background:var(--raise)}
+.tile .tdot{width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:color-mix(in srgb,var(--c) 18%,transparent);margin-bottom:8px}
+.tile .tdot i{width:10px;height:10px;border-radius:50%;background:var(--c)}
+.tile b{font-weight:600}
+.tile small{color:var(--mute);font-size:13px}
+.how{list-style:none;padding:0;counter-reset:s;display:grid;gap:10px}
+.how li{counter-increment:s;display:grid;grid-template-columns:34px 1fr;column-gap:14px;padding:14px;border:1px solid var(--line);border-radius:14px;background:var(--panel)}
+.how li::before{content:counter(s);grid-row:span 2;width:34px;height:34px;border-radius:50%;background:var(--gold);color:#1a1405;font-weight:700;display:grid;place-items:center;font-family:var(--head)}
+.how b{font-weight:600}
+.how span{color:var(--mute);font-size:14px;line-height:1.45;margin-top:2px}
+.hfoot{margin-top:34px;display:grid;gap:12px;justify-items:start;color:var(--mute);font-size:13px}
+.hfoot p{margin:0}
+#homeNet{color:var(--gold)}
+.logo-btn{flex:none;border:0;background:none;padding:0;border-radius:12px;display:block}
+.logo-btn:hover .logo{filter:brightness(1.15)}
+@media (min-width:700px){.tiles{grid-template-columns:repeat(3,1fr)}}
+
 @media (max-width:800px){
   #app{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr) auto}
   #map{order:1;min-width:0}
@@ -153,11 +190,57 @@ dialog h3{font-family:var(--head);font-size:20px}
 </style>
 </head>
 <body>
+<div id="home" role="region" aria-label="Home page">
+  <div class="home-in">
+    <header class="hero">
+      <img class="hlogo" src="icon-192.png" width="64" height="64" alt="UBIDS logo">
+      <h1>Find your way around UBIDS</h1>
+      <p>Lecture halls, offices, hostels and more on the Wa campus, with walking directions from wherever you are standing.</p>
+      <div class="hbtns">
+        <button class="btn primary" id="homeOpen">Open campus map</button>
+        <button class="btn" id="homeLocate">Use my location</button>
+      </div>
+    </header>
+
+    <div class="search hsearch">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+      <input id="homeQ" type="search" placeholder="Where do you need to go?" autocomplete="off" aria-label="Search places">
+    </div>
+    <ul class="list" id="homeResults" hidden></ul>
+
+    <div id="homeSections">
+      <section>
+        <h2>Browse by type</h2>
+        <div class="tiles" id="homeTiles"></div>
+      </section>
+      <section id="homeFeaturedWrap">
+        <h2>Start here</h2>
+        <ul class="list" id="homeFeatured"></ul>
+      </section>
+      <section>
+        <h2>How it works</h2>
+        <ol class="how">
+          <li><b>Search or browse</b><span>Type a hall, office or hostel, or pick a type above.</span></li>
+          <li><b>Tap Get walking directions</b><span>Start from your location, or choose another place to start from.</span></li>
+          <li><b>Follow the gold line</b><span>The map shows your route, the walking time and each step.</span></li>
+        </ol>
+      </section>
+    </div>
+
+    <footer class="hfoot">
+      <p id="homeNet" hidden>You are offline. Saved places and maps still work.</p>
+      <button class="mini" id="homeInstall" hidden>Install app on your phone</button>
+      <p>Tip: in the map, tap Save map offline once on Wi-Fi to use it without internet.</p>
+      <p>Map data &copy; OpenStreetMap contributors</p>
+    </footer>
+  </div>
+</div>
+
 <div id="app">
   <aside id="panel" aria-label="Campus places">
     <div class="top">
       <div class="brand">
-        <img class="logo" src="icon-192.png" alt="UBIDS logo" width="44" height="44">
+        <button class="logo-btn" id="homeBtn" aria-label="Go to the home page"><img class="logo" src="icon-192.png" alt="" width="44" height="44"></button>
         <div class="brand-text">
           <h1>UBIDS Campus Map</h1>
           <p>Find any hall or office and walk there.</p>
@@ -256,6 +339,8 @@ dialog h3{font-family:var(--head);font-size:20px}
    ============================================================ */
 const CENTER = [9.9888, -2.4781];   // UBIDS campus, Wa (centre of all places)
 const START_ZOOM = 17;
+// Places shown under "Start here" on the home page (use ids from DEFAULT_PLACES; missing ids are skipped).
+const FEATURED_IDS = ['library-muu81nuc', 'new-administration-muu8c1tn', 'school-clinic-muu8rr02', 'ubids-school-entrance-muu8t4xf'];
 const SAT_NATIVE_ZOOM = 18;  // sharpest satellite zoom available here. If you see grey "not available" tiles when zoomed in, change to 17.
 
 const CATS = {
@@ -702,7 +787,7 @@ function showToast(msg, actionLabel, action) {
   if (!actionLabel || actionLabel !== 'Reload') toastTimer = setTimeout(() => { t.hidden = true; }, 6000);
 }
 
-function updateNet() { $('#netPill').hidden = navigator.onLine; }
+function updateNet() { $('#netPill').hidden = navigator.onLine; $('#homeNet').hidden = navigator.onLine; }
 addEventListener('online', updateNet);
 addEventListener('offline', updateNet);
 updateNet();
@@ -716,17 +801,19 @@ if ('serviceWorker' in navigator && location.protocol !== 'file:') {
 }
 
 /* Install button */
+function setInstallVisible(v) { $('#installBtn').hidden = !v; $('#homeInstall').hidden = !v; }
+$('#homeInstall').addEventListener('click', () => $('#installBtn').click());
 let installEvent = null;
 const isStandalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
 const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
-addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvent = e; $('#installBtn').hidden = false; });
-addEventListener('appinstalled', () => { $('#installBtn').hidden = true; installEvent = null; });
-if (isIOS && !isStandalone) $('#installBtn').hidden = false;
+addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvent = e; setInstallVisible(true); });
+addEventListener('appinstalled', () => { setInstallVisible(false); installEvent = null; });
+if (isIOS && !isStandalone) setInstallVisible(true);
 $('#installBtn').addEventListener('click', async () => {
   if (installEvent) {
     installEvent.prompt();
     await installEvent.userChoice;
-    installEvent = null; $('#installBtn').hidden = true;
+    installEvent = null; setInstallVisible(false);
   } else {
     showToast('On iPhone: tap the Share button, then choose Add to Home Screen.');
   }
@@ -802,6 +889,83 @@ $('#offlineBtn').addEventListener('click', async () => {
     saving = false; btn.disabled = false; btn.textContent = 'Save map offline';
   }
 });
+
+/* ---------- Home page ---------- */
+const homeEl = $('#home');
+
+function itemHtml(p) {
+  return `<li><button class="item" data-id="${esc(p.id)}" style="--c:${CATS[p.cat].color}">
+    <span class="dot"><i></i></span>
+    <span><b>${esc(p.name)}</b><small>${esc(CATS[p.cat].label)}</small></span>
+  </button></li>`;
+}
+
+function renderHome() {
+  $('#homeTiles').innerHTML = Object.entries(CATS).map(([k, v]) => {
+    const n = places.filter(p => p.cat === k).length;
+    if (!n) return '';
+    return `<button class="tile" data-cat="${k}" style="--c:${v.color}">
+      <span class="tdot"><i></i></span><b>${esc(v.label)}</b><small>${n} ${n === 1 ? 'place' : 'places'}</small></button>`;
+  }).join('');
+  const feat = FEATURED_IDS.map(byId).filter(Boolean);
+  $('#homeFeatured').innerHTML = feat.map(itemHtml).join('');
+  $('#homeFeaturedWrap').hidden = !feat.length;
+}
+
+function homeSearch(raw) {
+  const q = raw.trim().toLowerCase();
+  const ul = $('#homeResults');
+  if (!q) { ul.hidden = true; $('#homeSections').hidden = false; return; }
+  const items = places.filter(p => `${p.name} ${p.desc} ${CATS[p.cat].label}`.toLowerCase().includes(q)).slice(0, 8);
+  ul.innerHTML = items.length ? items.map(itemHtml).join('')
+    : '<li class="empty">No place matches that. Try another word, or open the map to browse.</li>';
+  ul.hidden = false; $('#homeSections').hidden = true;
+}
+
+function setHomeOpen(open) {
+  homeEl.hidden = !open;
+  $('#app').inert = open;
+  if (open) homeEl.scrollTop = 0;
+  else setTimeout(() => map.invalidateSize(), 30);
+}
+
+function openMap(opts = {}) {
+  setHomeOpen(false);
+  if (location.hash !== '#map') history.pushState({ map: 1 }, '', '#map');
+  if (opts.cat !== undefined) { activeCat = opts.cat; renderChips(); }
+  if (opts.query !== undefined) { query = opts.query; $('#q').value = query; }
+  if (opts.cat !== undefined || opts.query !== undefined) goList();
+  setTimeout(() => {
+    map.invalidateSize();
+    if (opts.id) showPlace(opts.id);
+    if (opts.locate) $('#locate').click();
+  }, 60);
+}
+
+function showHome() {
+  history.replaceState(null, '', location.pathname + location.search);
+  setHomeOpen(true);
+}
+
+$('#homeOpen').addEventListener('click', () => openMap());
+$('#homeLocate').addEventListener('click', () => openMap({ locate: true }));
+$('#homeBtn').addEventListener('click', showHome);
+$('#homeTiles').addEventListener('click', e => {
+  const t = e.target.closest('.tile'); if (t) openMap({ cat: t.dataset.cat, query: '' });
+});
+['#homeFeatured', '#homeResults'].forEach(sel => $(sel).addEventListener('click', e => {
+  const b = e.target.closest('.item'); if (b) openMap({ id: b.dataset.id });
+}));
+$('#homeQ').addEventListener('input', e => homeSearch(e.target.value));
+$('#homeQ').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  const v = e.target.value.trim();
+  if (v) { activeCat = 'all'; renderChips(); openMap({ cat: 'all', query: v }); }
+});
+addEventListener('popstate', () => setHomeOpen(location.hash !== '#map'));
+
+renderHome();
+setHomeOpen(!(ADMIN || location.hash === '#map'));
 </script>
 </body>
 </html>
