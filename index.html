@@ -157,8 +157,8 @@ dialog h3{font-family:var(--head);font-size:20px}
 .home-in{max-width:1000px;margin:0 auto;padding:44px 20px calc(48px + env(safe-area-inset-bottom))}
 
 .hero{display:grid;gap:34px}
-.hero h1{font-size:clamp(40px,11.5vw,66px);font-weight:800;line-height:1.02;letter-spacing:-.035em;color:#0f2b5b}
-.hero p{margin-top:20px;color:#4f607a;font-size:18px;line-height:1.6;max-width:32em;font-weight:500}
+.hero h1{font-size:clamp(28px,7.4vw,44px);font-weight:800;line-height:1.1;letter-spacing:-.025em;color:#0f2b5b}
+.hero p{margin-top:16px;color:#4f607a;font-size:16px;line-height:1.6;max-width:32em;font-weight:500}
 .hbtns{display:flex;flex-direction:column;align-items:flex-start;gap:14px;margin-top:30px}
 #home .btn{height:56px;padding:0 28px;border-radius:12px;font-size:17px;font-weight:600;background:#fff;border:1px solid #dbe3ee;color:#0f2b5b;box-shadow:0 2px 8px rgba(15,43,91,.07)}
 #home .btn:hover{background:#f7f9fc}
@@ -204,7 +204,7 @@ dialog h3{font-family:var(--head);font-size:20px}
 .logo-btn:hover .logo{filter:brightness(1.15)}
 @media (min-width:700px){
   .hbtns{flex-direction:row;align-items:center}
-  .hero p{font-size:19px}
+  .hero p{font-size:17px}
 }
 @media (min-width:860px){
   .hero{grid-template-columns:1.05fr .95fr;gap:56px;align-items:center}
@@ -261,7 +261,7 @@ dialog h3{font-family:var(--head);font-size:20px}
         </div>
       </div>
       <figure class="hphoto">
-        <img src="school-photo.jpg" alt="Students seated in a hall at UBIDS" width="708" height="458" fetchpriority="high" onerror="this.closest('figure').hidden=true">
+        <img src="school-photo.jpg" alt="Students seated in a hall at UBIDS" width="708" height="458" fetchpriority="high" onerror="if(!this.dataset.retry){this.dataset.retry=1;this.src='school-photo.jpeg'}else{this.closest('figure').hidden=true}">
       </figure>
     </section>
 
