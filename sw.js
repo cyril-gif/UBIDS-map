@@ -21,7 +21,7 @@ const CDN_PRECACHE = [
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js',
   'https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js'
 ];
-const OPTIONAL_PRECACHE = ['./school-photo.jpg'];
+const OPTIONAL_PRECACHE = ['./school-photo.jpg', './school-photo.jpeg'];
 const CDN_HOSTS = ['cdnjs.cloudflare.com'];
 const TILE_HOSTS = ['basemaps.cartocdn.com', 'server.arcgisonline.com'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
