@@ -269,278 +269,39 @@ const CATS = {
 };
 
 const DEFAULT_PLACES = [
-  {
-    "id": "library-muu81nuc",
-    "name": "Library",
-    "cat": "library",
-    "desc": "Reading rooms, borrowing desk and quiet study space.",
-    "lat": 9.992646,
-    "lng": -2.478554
-  },
-  {
-    "id": "lecture-hall-2-muu83a23",
-    "name": "Lecture Hall 2",
-    "cat": "academic",
-    "desc": "Lecture hall. Your timetable shows which hall your course uses.",
-    "lat": 9.992773,
-    "lng": -2.480657
-  },
-  {
-    "id": "lecture-hall-1-muu84dem",
-    "name": "Lecture Hall 1",
-    "cat": "academic",
-    "desc": "Lecture hall. Your timetable shows which hall your course uses.",
-    "lat": 9.991991,
-    "lng": -2.480829
-  },
-  {
-    "id": "lecture-hall-3-muu859ip",
-    "name": "Lecture Hall 3",
-    "cat": "academic",
-    "desc": "Lecture hall. Your timetable shows which hall your course uses.",
-    "lat": 9.99197,
-    "lng": -2.482052
-  },
-  {
-    "id": "spanish-lab-muu86rc2",
-    "name": "Spanish Lab",
-    "cat": "library",
-    "desc": "Language lab for Spanish classes.",
-    "lat": 9.994126,
-    "lng": -2.479906
-  },
-  {
-    "id": "lecture-hall-4-muu87ou0",
-    "name": "Lecture Hall 4",
-    "cat": "academic",
-    "desc": "Lecture hall. Your timetable shows which hall your course uses.",
-    "lat": 9.995436,
-    "lng": -2.480421
-  },
-  {
-    "id": "old-auditorium-muu89wkr",
-    "name": "Old Auditorium",
-    "cat": "academic",
-    "desc": "Large hall for assemblies and big events.",
-    "lat": 9.989749,
-    "lng": -2.477825
-  },
-  {
-    "id": "new-auditorium-muu8ad4n",
-    "name": "New Auditorium",
-    "cat": "academic",
-    "desc": "Large hall for assemblies and big events.",
-    "lat": 9.990406,
-    "lng": -2.480721
-  },
-  {
-    "id": "new-administration-muu8c1tn",
-    "name": "New Administration",
-    "cat": "admin",
-    "desc": "Main administration offices. Ask at the front desk if you are not sure where to go.",
-    "lat": 9.991949,
-    "lng": -2.483876
-  },
-  {
-    "id": "upper-west-halls-muu8d5kj",
-    "name": "Upper West Halls",
-    "cat": "academic",
-    "desc": "",
-    "lat": 9.998436,
-    "lng": -2.484155
-  },
-  {
-    "id": "pavilion-1-muu8eu1o",
-    "name": "Pavilion 1",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.987553,
-    "lng": -2.483726
-  },
-  {
-    "id": "pavilion-2-muu8ffxe",
-    "name": "Pavilion 2",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.987067,
-    "lng": -2.483811
-  },
-  {
-    "id": "pavilion-3-muu8fxqy",
-    "name": "Pavilion 3",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.986666,
-    "lng": -2.483661
-  },
-  {
-    "id": "pavilion-4-muu8gbqd",
-    "name": "Pavilion 4",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.987384,
-    "lng": -2.484434
-  },
-  {
-    "id": "pavilion-5-muu8hdrz",
-    "name": "Pavilion 5",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.987088,
-    "lng": -2.484519
-  },
-  {
-    "id": "pavilion-6-muu8hz3a",
-    "name": "Pavilion 6",
-    "cat": "academic",
-    "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.",
-    "lat": 9.986497,
-    "lng": -2.484369
-  },
-  {
-    "id": "jubilee-hall-muu8looc",
-    "name": "Jubilee Hall",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.987215,
-    "lng": -2.47716
-  },
-  {
-    "id": "cardinal-hall-muu8omjz",
-    "name": "Cardinal Hall",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.985979,
-    "lng": -2.475373
-  },
-  {
-    "id": "royal-hall-muu8q5z6",
-    "name": "Royal Hall",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.987564,
-    "lng": -2.472149
-  },
-  {
-    "id": "limann-hall-muu8r32l",
-    "name": "Limann Hall",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.988832,
-    "lng": -2.473705
-  },
-  {
-    "id": "school-clinic-muu8rr02",
-    "name": "School Clinic",
-    "cat": "services",
-    "desc": "Health care and first aid for students.",
-    "lat": 9.990676,
-    "lng": -2.474606
-  },
-  {
-    "id": "ubids-school-entrance-muu8t4xf",
-    "name": "Ubids School Entrance",
-    "cat": "other",
-    "desc": "One of the entrances to the campus.",
-    "lat": 9.991521,
-    "lng": -2.473935
-  },
-  {
-    "id": "ubids-police-station-muu8vcj7",
-    "name": "Ubids Police Station",
-    "cat": "other",
-    "desc": "Campus police post.",
-    "lat": 9.99215,
-    "lng": -2.473447
-  },
-  {
-    "id": "jubilee-volley-court-muu90xfa",
-    "name": "Jubilee Volley Court",
-    "cat": "other",
-    "desc": "Volleyball court.",
-    "lat": 9.98731,
-    "lng": -2.476484
-  },
-  {
-    "id": "kinky-boutique-muu93zb7",
-    "name": "Kinky boutique",
-    "cat": "food",
-    "desc": "",
-    "lat": 9.986956,
-    "lng": -2.475609
-  },
-  {
-    "id": "green-pavilion-muu95gb3",
-    "name": "Green pavilion",
-    "cat": "food",
-    "desc": "",
-    "lat": 9.987218,
-    "lng": -2.475609
-  },
-  {
-    "id": "madam-gandaa-muu96tzi",
-    "name": "Madam Gandaa",
-    "cat": "food",
-    "desc": "",
-    "lat": 9.986745,
-    "lng": -2.475781
-  },
-  {
-    "id": "ubids-stadium-muu999q1",
-    "name": "Ubids Stadium",
-    "cat": "other",
-    "desc": "Sports stadium.",
-    "lat": 9.989936,
-    "lng": -2.473941
-  },
-  {
-    "id": "royal-basketball-court-muu9bf43",
-    "name": "Royal Basketball Court",
-    "cat": "other",
-    "desc": "Basketball court.",
-    "lat": 9.987601,
-    "lng": -2.471489
-  },
-  {
-    "id": "british-cottage-muu9e2uz",
-    "name": "British Cottage",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.980632,
-    "lng": -2.476977
-  },
-  {
-    "id": "havard-hostel-muu9hang",
-    "name": "Havard Hostel",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.981319,
-    "lng": -2.47481
-  },
-  {
-    "id": "catholic-hostel-muu9jb2c",
-    "name": "Catholic Hostel",
-    "cat": "hostel",
-    "desc": "Student accommodation.",
-    "lat": 9.982651,
-    "lng": -2.470111
-  },
-  {
-    "id": "pope-john-parish-muu9kqyw",
-    "name": "Pope John Parish",
-    "cat": "hall/church",
-    "desc": "Catholic parish church.",
-    "lat": 9.982925,
-    "lng": -2.471216
-  },
-  {
-    "id": "rosa-park-muuc8pty",
-    "name": "Rosa Park",
-    "cat": "academic",
-    "desc": "",
-    "lat": 9.974831,
-    "lng": -2.46465
-  }
+  {"id": "library-muu81nuc", "name": "Library", "cat": "library", "desc": "Reading rooms, borrowing desk and quiet study space.", "lat": 9.992646, "lng": -2.478554},
+  {"id": "lecture-hall-2-muu83a23", "name": "Lecture Hall 2", "cat": "academic", "desc": "Lecture hall. Your timetable shows which hall your course uses.", "lat": 9.992773, "lng": -2.480657},
+  {"id": "lecture-hall-1-muu84dem", "name": "Lecture Hall 1", "cat": "academic", "desc": "Lecture hall. Your timetable shows which hall your course uses.", "lat": 9.991991, "lng": -2.480829},
+  {"id": "lecture-hall-3-muu859ip", "name": "Lecture Hall 3", "cat": "academic", "desc": "Lecture hall. Your timetable shows which hall your course uses.", "lat": 9.99197, "lng": -2.482052},
+  {"id": "spanish-lab-muu86rc2", "name": "Spanish Lab", "cat": "library", "desc": "Language lab for Spanish classes.", "lat": 9.994126, "lng": -2.479906},
+  {"id": "lecture-hall-4-muu87ou0", "name": "Lecture Hall 4", "cat": "academic", "desc": "Lecture hall. Your timetable shows which hall your course uses.", "lat": 9.995436, "lng": -2.480421},
+  {"id": "old-auditorium-muu89wkr", "name": "Old Auditorium", "cat": "academic", "desc": "Large hall for assemblies and big events.", "lat": 9.989749, "lng": -2.477825},
+  {"id": "new-auditorium-muu8ad4n", "name": "New Auditorium", "cat": "academic", "desc": "Large hall for assemblies and big events.", "lat": 9.990406, "lng": -2.480721},
+  {"id": "new-administration-muu8c1tn", "name": "New Administration", "cat": "admin", "desc": "Main administration offices. Ask at the front desk if you are not sure where to go.", "lat": 9.991949, "lng": -2.483876},
+  {"id": "upper-west-halls-muu8d5kj", "name": "Upper West Halls", "cat": "academic", "desc": "", "lat": 9.998436, "lng": -2.484155},
+  {"id": "pavilion-1-muu8eu1o", "name": "Pavilion 1", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.987553, "lng": -2.483726},
+  {"id": "pavilion-2-muu8ffxe", "name": "Pavilion 2", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.987067, "lng": -2.483811},
+  {"id": "pavilion-3-muu8fxqy", "name": "Pavilion 3", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.986666, "lng": -2.483661},
+  {"id": "pavilion-4-muu8gbqd", "name": "Pavilion 4", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.987384, "lng": -2.484434},
+  {"id": "pavilion-5-muu8hdrz", "name": "Pavilion 5", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.987088, "lng": -2.484519},
+  {"id": "pavilion-6-muu8hz3a", "name": "Pavilion 6", "cat": "academic", "desc": "Lecture pavilion. Your timetable shows which pavilion your class uses.", "lat": 9.986497, "lng": -2.484369},
+  {"id": "jubilee-hall-muu8looc", "name": "Jubilee Hall", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.987215, "lng": -2.47716},
+  {"id": "cardinal-hall-muu8omjz", "name": "Cardinal Hall", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.985979, "lng": -2.475373},
+  {"id": "royal-hall-muu8q5z6", "name": "Royal Hall", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.987564, "lng": -2.472149},
+  {"id": "limann-hall-muu8r32l", "name": "Limann Hall", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.988832, "lng": -2.473705},
+  {"id": "school-clinic-muu8rr02", "name": "School Clinic", "cat": "services", "desc": "Health care and first aid for students.", "lat": 9.990676, "lng": -2.474606},
+  {"id": "ubids-school-entrance-muu8t4xf", "name": "Ubids School Entrance", "cat": "services", "desc": "One of the entrances to the campus.", "lat": 9.991521, "lng": -2.473935},
+  {"id": "ubids-police-station-muu8vcj7", "name": "Ubids Police Station", "cat": "services", "desc": "Campus police post.", "lat": 9.99215, "lng": -2.473447},
+  {"id": "jubilee-volley-court-muu90xfa", "name": "Jubilee Volley Court", "cat": "other", "desc": "Volleyball court.", "lat": 9.98731, "lng": -2.476484},
+  {"id": "kinky-boutique-muu93zb7", "name": "Kinky boutique", "cat": "food", "desc": "", "lat": 9.986956, "lng": -2.475609},
+  {"id": "green-pavilion-muu95gb3", "name": "Green pavilion", "cat": "food", "desc": "", "lat": 9.987218, "lng": -2.475609},
+  {"id": "madam-gandaa-muu96tzi", "name": "Madam Gandaa", "cat": "food", "desc": "", "lat": 9.986745, "lng": -2.475781},
+  {"id": "ubids-stadium-muu999q1", "name": "Ubids Stadium", "cat": "other", "desc": "Sports stadium.", "lat": 9.989936, "lng": -2.473941},
+  {"id": "royal-basketball-court-muu9bf43", "name": "Royal Basketball Court", "cat": "other", "desc": "Basketball court.", "lat": 9.987601, "lng": -2.471489},
+  {"id": "british-cottage-muu9e2uz", "name": "British Cottage", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.980632, "lng": -2.476977},
+  {"id": "havard-hostel-muu9hang", "name": "Havard Hostel", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.981319, "lng": -2.47481},
+  {"id": "catholic-hostel-muu9jb2c", "name": "Catholic Hostel", "cat": "hostel", "desc": "Student accommodation.", "lat": 9.982651, "lng": -2.470111},
+  {"id": "pope-john-parish-muu9kqyw", "name": "Pope John Parish", "cat": "hall/church", "desc": "Catholic parish church.", "lat": 9.982925, "lng": -2.471216}
 ];
 
 // Free walking router (OpenStreetMap Germany, foot profile). No API key.
