@@ -905,6 +905,34 @@ const lat2y = (lat, z) => {
   return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * 2 ** z);
 };
 
+/* Sharper satellite imagery where Esri has it.
+   Starts at SAT_NATIVE_ZOOM, then asks Esri if level 20 or 19 exists around the campus and uses the best one.
+   Offline, it drops back to level 18 because that is the level the offline download saves. */
+let satNative = SAT_NATIVE_ZOOM, bestSatNative = SAT_NATIVE_ZOOM;
+function applySatNative(z) {
+  satNative = z;
+  [sat, hybridSat].forEach(l => { l.options.maxNativeZoom = z; if (map.hasLayer(l)) l.redraw(); });
+}
+async function detectSatZoom() {
+  for (const z of [20, 19]) {
+    if (z <= SAT_NATIVE_ZOOM) break;
+    try {
+      const x = lng2x(CENTER[1], z) - 3, y = lat2y(CENTER[0], z) - 3;
+      const res = await fetch(`https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tilemap/${z}/${y}/${x}/6/6?f=json`);
+      const data = (await res.json()).data || [];
+      if (data.length && data.reduce((a, b) => a + b, 0) / data.length >= 0.6) {
+        bestSatNative = z;
+        if (navigator.onLine) applySatNative(z);
+        return;
+      }
+    } catch (e) { /* keep the default level */ }
+  }
+}
+function syncSatToNetwork() { applySatNative(navigator.onLine ? bestSatNative : Math.min(bestSatNative, 18)); }
+addEventListener('online', syncSatToNetwork);
+addEventListener('offline', syncSatToNetwork);
+if (navigator.onLine) detectSatZoom();
+
 function campusTileUrls() {
   // Satellite goes down to the sharpest level; road and place names only to level 17 to keep the download small.
   const sets = [{ url: SAT_URL, maxZ: Math.min(18, SAT_NATIVE_ZOOM) }];
