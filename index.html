@@ -487,17 +487,23 @@ const byId = id => places.find(p => p.id === id);
 const map = L.map('map', { zoomControl: false, maxZoom: 22, center: CENTER, zoom: START_ZOOM });
 L.control.zoom({ position: 'topright' }).addTo(map);
 
-const DARK_URL = 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png';
 const SAT_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-const dark = L.tileLayer(DARK_URL, {
-  maxZoom: 22, maxNativeZoom: 19, subdomains: 'abcd',
-  attribution: '&copy; OpenStreetMap contributors &copy; CARTO'
-});
-const sat = L.tileLayer(SAT_URL, {
-  maxZoom: 22, maxNativeZoom: SAT_NATIVE_ZOOM, attribution: 'Imagery &copy; Esri'
-});
+const ROADS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}';
+const LABELS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
+const esri = (url, attribution, zIndex) => L.tileLayer(url, { maxZoom: 22, maxNativeZoom: SAT_NATIVE_ZOOM, attribution, zIndex });
+
+const sat = esri(SAT_URL, 'Imagery &copy; Esri', 1);
+// Hybrid = the same satellite imagery with Esri road and place names on top
+const hybridSat = esri(SAT_URL, 'Imagery &copy; Esri', 1);
+const hybrid = L.layerGroup([
+  hybridSat,
+  esri(ROADS_URL, '', 2),
+  esri(LABELS_URL, 'Labels &copy; Esri', 3)
+]);
+const baseLayers = { 'Satellite': sat, 'Hybrid': hybrid };
+
 let tileErrors = 0;
-[dark, sat].forEach(t => {
+[sat, hybridSat].forEach(t => {
   t.on('tileload', () => { tileErrors = 0; $('#tileNote').hidden = true; });
   t.on('tileerror', () => {
     if (++tileErrors < 6) return;
@@ -507,8 +513,16 @@ let tileErrors = 0;
     $('#tileNote').hidden = false;
   });
 });
-dark.addTo(map);
-L.control.layers({ 'Dark map': dark, 'Satellite': sat }, null, { position: 'topright' }).addTo(map);
+// Satellite is the default; the last style a student picked is remembered on their phone.
+const BASE_KEY = 'ubids_basemap';
+let baseName = 'Satellite';
+try { const saved = localStorage.getItem(BASE_KEY); if (baseLayers[saved]) baseName = saved; } catch (e) {}
+baseLayers[baseName].addTo(map);
+L.control.layers(baseLayers, null, { position: 'topright', collapsed: false }).addTo(map);
+map.on('baselayerchange', e => {
+  baseName = e.name;
+  try { localStorage.setItem(BASE_KEY, e.name); } catch (err) {}
+});
 
 const markerLayer = L.layerGroup().addTo(map);
 function updateLabels() { $('#map').classList.toggle('hide-labels', map.getZoom() < 17); }
@@ -839,8 +853,6 @@ if (!ADMIN && places.length) {
 
 /* ---------- PWA: install, offline, updates ---------- */
 const TILE_CACHE = 'ubids-tiles-v1';   // same name as TILES in sw.js
-let baseName = 'Dark map';
-map.on('baselayerchange', e => { baseName = e.name; });
 
 let toastTimer;
 function showToast(msg, actionLabel, action) {
@@ -894,22 +906,20 @@ const lat2y = (lat, z) => {
 };
 
 function campusTileUrls() {
-  const satellite = baseName === 'Satellite';
-  const b = L.latLngBounds(places.map(p => [p.lat, p.lng])).pad(0.25);
-  const maxZ = satellite ? Math.min(18, SAT_NATIVE_ZOOM) : 18;
+  // Satellite goes down to the sharpest level; road and place names only to level 17 to keep the download small.
+  const sets = [{ url: SAT_URL, maxZ: Math.min(18, SAT_NATIVE_ZOOM) }];
+  if (baseName === 'Hybrid') sets.push({ url: ROADS_URL, maxZ: 17 }, { url: LABELS_URL, maxZ: 17 });
+  const bounds = L.latLngBounds(places.map(p => [p.lat, p.lng])).pad(0.25);
   const urls = [];
-  for (let z = 15; z <= maxZ; z++) {
-    const x0 = lng2x(b.getWest(), z), x1 = lng2x(b.getEast(), z);
-    const y0 = lat2y(b.getNorth(), z), y1 = lat2y(b.getSouth(), z);
-    for (let x = x0; x <= x1; x++) {
-      for (let y = y0; y <= y1; y++) {
-        urls.push(satellite
-          ? SAT_URL.replace('{z}', z).replace('{y}', y).replace('{x}', x)
-          : DARK_URL.replace('{s}', 'abcd'[Math.abs(x + y) % 4]).replace('{z}', z).replace('{x}', x).replace('{y}', y)
-              .replace('{r}', L.Browser.retina ? '@2x' : ''));
+  sets.forEach(({ url, maxZ }) => {
+    for (let z = 15; z <= maxZ; z++) {
+      const x0 = lng2x(bounds.getWest(), z), x1 = lng2x(bounds.getEast(), z);
+      const y0 = lat2y(bounds.getNorth(), z), y1 = lat2y(bounds.getSouth(), z);
+      for (let x = x0; x <= x1; x++) {
+        for (let y = y0; y <= y1; y++) urls.push(url.replace('{z}', z).replace('{y}', y).replace('{x}', x));
       }
     }
-  }
+  });
   return urls;
 }
 
@@ -918,9 +928,9 @@ $('#offlineBtn').addEventListener('click', async () => {
   if (saving) return;
   if (!navigator.onLine) { showToast('Connect to the internet first, then save the map.'); return; }
   const urls = campusTileUrls();
-  const satellite = baseName === 'Satellite';
-  const mb = Math.max(1, Math.round(urls.length * (satellite ? 0.04 : 0.02)));
-  if (!confirm(`Save the ${satellite ? 'satellite' : 'dark'} map of the campus for offline use?\n\nAbout ${urls.length} map pieces, roughly ${mb} MB. Use Wi-Fi if you can.`)) return;
+  const imagery = urls.filter(u => u.includes('World_Imagery')).length;
+  const mb = Math.max(1, Math.round(imagery * 0.04 + (urls.length - imagery) * 0.015));
+  if (!confirm(`Save the ${baseName.toLowerCase()} map of the campus for offline use?\n\nAbout ${urls.length} map pieces, roughly ${mb} MB. Use Wi-Fi if you can.`)) return;
 
   saving = true;
   const btn = $('#offlineBtn');
