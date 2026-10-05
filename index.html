@@ -116,10 +116,14 @@ button{cursor:pointer}
 .lbl{background:var(--panel);color:var(--text);border:1px solid var(--line);border-radius:8px;font-size:12.5px;font-weight:600;padding:3px 8px;box-shadow:0 2px 8px rgba(0,0,0,.4)}
 .lbl::before{display:none!important}
 .hide-labels .lbl{display:none}
+/* Hybrid photo: warm, dry-season tone (colour only, the picture itself is the same Esri image) */
+.tint-warm{filter:hue-rotate(-35deg) sepia(.55) saturate(1.15) brightness(1.1) contrast(1.25)}
 .osm-lbl{background:none;border:0;pointer-events:none}
-.osm-lbl span{position:absolute;left:0;top:0;white-space:nowrap;font-size:12px;font-weight:700;letter-spacing:.02em;color:#fff;text-shadow:0 0 2px #000,0 0 3px #000,0 0 5px #000;transform:translate(-50%,-50%) rotate(var(--r,0deg))}
-.osm-lbl.place span{color:#ffe7a3;font-weight:600;font-size:11.5px}
-#map.hide-road-lbl .osm-lbl.road,#map.hide-place-lbl .osm-lbl.place{display:none}
+.osm-lbl span{position:absolute;left:0;top:0;white-space:nowrap;font-size:13px;font-weight:600;letter-spacing:.01em;color:#fff;text-shadow:0 0 2px #000,0 0 3px #000,0 0 4px #000,0 0 6px rgba(0,0,0,.8);transform:translate(-50%,-50%) rotate(var(--r,0deg))}
+.osm-lbl.poi span{display:flex;align-items:flex-start;gap:5px;white-space:normal;width:9.5em;font-size:12.5px;line-height:1.15;transform:translate(-11px,-100%);text-align:left;padding-bottom:1px}
+.osm-lbl.poi svg{flex:none;filter:drop-shadow(0 1px 2px rgba(0,0,0,.6))}
+.osm-lbl.place span{font-weight:600;font-size:12.5px;letter-spacing:.02em;text-transform:uppercase;white-space:normal;width:9em;text-align:center;line-height:1.15}
+#map.hide-road-lbl .osm-lbl.road,#map.hide-place-lbl .osm-lbl.place,#map.hide-place-lbl .osm-lbl.poi{display:none}
 .leaflet-routing-container{display:none!important}
 .me-dot{width:16px;height:16px;border-radius:50%;background:#4aa3ff;border:3px solid #fff;box-shadow:0 0 0 6px rgba(74,163,255,.3)}
 
@@ -494,11 +498,11 @@ L.control.zoom({ position: 'topright' }).addTo(map);
 const SAT_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 const ROADS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Transportation/MapServer/tile/{z}/{y}/{x}';
 const LABELS_URL = 'https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}';
-const esri = (url, attribution, zIndex) => L.tileLayer(url, { maxZoom: 22, maxNativeZoom: SAT_NATIVE_ZOOM, attribution, zIndex });
+const esri = (url, attribution, zIndex, className) => L.tileLayer(url, { maxZoom: 22, maxNativeZoom: SAT_NATIVE_ZOOM, attribution, zIndex, className });
 
 const sat = esri(SAT_URL, 'Imagery &copy; Esri', 1);
 // Hybrid = the same satellite imagery with Esri road and place names on top
-const hybridSat = esri(SAT_URL, 'Imagery &copy; Esri', 1);
+const hybridSat = esri(SAT_URL, 'Imagery &copy; Esri', 1, 'tint-warm');
 const osmGroup = L.layerGroup([], { attribution: 'Roads and names &copy; OpenStreetMap contributors' });
 const hybrid = L.layerGroup([
   hybridSat,
@@ -1133,33 +1137,37 @@ function parseOsm(json) {
       });
     } else if (t.name) {
       const c = el.center || (el.lat != null ? { lat: el.lat, lon: el.lon } : null);
-      if (c) names.push({ n: t.name, lat: +c.lat.toFixed(5), lng: +c.lon.toFixed(5) });
+      if (c) names.push({ n: t.name, lat: +c.lat.toFixed(5), lng: +c.lon.toFixed(5), k: t.place ? 'p' : 'o' });
     }
   });
   return { roads, names };
 }
 
+const POI_PIN = '<svg width="22" height="28" viewBox="0 0 22 28"><path d="M11 1C5.5 1 1.5 5 1.5 10.2c0 6.2 9.5 16.3 9.5 16.3s9.5-10.1 9.5-16.3C20.5 5 16.5 1 11 1z" fill="#aab4c2" stroke="#fff" stroke-width="1.4"/><circle cx="11" cy="10" r="3.6" fill="#fff"/></svg>';
+
 function textMarker(lat, lng, text, cls, angle) {
+  const pin = cls === 'poi' ? POI_PIN : '';
   return L.marker([lat, lng], {
-    icon: L.divIcon({ className: 'osm-lbl ' + cls, html: `<span style="--r:${angle || 0}deg">${esc(text)}</span>`, iconSize: [0, 0] }),
+    icon: L.divIcon({ className: 'osm-lbl ' + cls, html: `<span style="--r:${angle || 0}deg">${pin}<b style="font-weight:inherit">${esc(text)}</b></span>`, iconSize: [0, 0] }),
     interactive: false, keyboard: false, zIndexOffset: -1000
   });
 }
 
 function drawOsm(data) {
   osmGroup.clearLayers();
-  const weight = r => r.c === 'f' ? 2 : r.c === 'm' ? 5 : 3.5;
-  // casings first so every road joins cleanly, then the road colour on top
-  data.roads.forEach(r => osmGroup.addLayer(L.polyline(r.p, {
-    renderer: roadRenderer, color: '#0b0f13', opacity: .55, weight: weight(r) + 3, lineCap: 'round', interactive: false })));
-  data.roads.forEach(r => osmGroup.addLayer(L.polyline(r.p, {
-    renderer: roadRenderer, color: r.c === 'f' ? '#f6efd6' : '#ffffff', opacity: .95, weight: weight(r),
-    dashArray: r.c === 'f' ? '4 5' : null, lineCap: 'round', interactive: false })));
+  // Look of a hybrid map: main roads as a tan band with a dark edge. Footpaths and unnamed side roads are
+  // already visible in the photo, so they are not drawn on top of it.
+  const shown = data.roads.filter(r => r.c === 'm' || (r.c === 'r' && r.n));
+  const width = r => r.c === 'm' ? 9 : 4;
+  shown.forEach(r => osmGroup.addLayer(L.polyline(r.p, {
+    renderer: roadRenderer, color: '#2b2418', opacity: .6, weight: width(r) + 3, lineCap: 'round', interactive: false })));
+  shown.forEach(r => osmGroup.addLayer(L.polyline(r.p, {
+    renderer: roadRenderer, color: r.c === 'm' ? '#e9d8a6' : '#efe7cf', opacity: r.c === 'm' ? .95 : .8, weight: width(r), lineCap: 'round', interactive: false })));
 
   const seenRoad = new Set();
   data.roads.forEach(r => {
     const k = r.n.toLowerCase();
-    if (!r.n || seenRoad.has(k)) return;
+    if (!r.n || seenRoad.has(k) || r.c === 'f') return;
     seenRoad.add(k);
     const i = Math.floor((r.p.length - 1) / 2);
     const a = r.p[i], b = r.p[i + 1] || r.p[i];
@@ -1174,7 +1182,7 @@ function drawOsm(data) {
     const k = n.n.toLowerCase();
     if (seen.has(k) || own.some(o => o === k || o.includes(k) || k.includes(o))) return;
     seen.add(k);
-    osmGroup.addLayer(textMarker(n.lat, n.lng, n.n, 'place'));
+    osmGroup.addLayer(textMarker(n.lat, n.lng, n.n, n.k === 'p' ? 'place' : 'poi'));
   });
 }
 
