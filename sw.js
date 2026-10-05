@@ -23,7 +23,7 @@ const CDN_PRECACHE = [
 ];
 const OPTIONAL_PRECACHE = ['./school-photo.jpg', './school-photo.jpeg'];
 const CDN_HOSTS = ['cdnjs.cloudflare.com'];
-const TILE_HOSTS = ['basemaps.cartocdn.com', 'server.arcgisonline.com'];
+const TILE_HOSTS = ['server.arcgisonline.com'];
 const FONT_HOSTS = ['fonts.googleapis.com', 'fonts.gstatic.com'];
 
 self.addEventListener('install', event => {
